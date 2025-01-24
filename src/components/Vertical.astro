@@ -215,8 +215,9 @@ const properties = [
 ]
 ---
 
-<main class="grid grid-cols-1 lg:grid-cols-6 gap-2">
-  <div class="xl:col-span-3 lg:col-span-2 h-[calc(100vh-4rem)] sticky top-16">
+<main class="lg:grid grid-cols-1 lg:grid-cols-6 gap-2  flex flex-col">
+  <div class="xl:col-span-3 lg:col-span-2 h-[400px] lg:h-[calc(100vh-4rem)] hidden lg:block lg:sticky top-16">
+    
     <Map />
   </div>
 
@@ -266,10 +267,10 @@ const properties = [
         </div>
       </div>
     </section>
-    <div id="gridView" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+    <div id="gridView" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 ">
       {properties.map((property) => <PropertyCard {...property} />)}
     </div>
-    <div id="listView" class="hidden flex flex-col gap-6">
+    <div id="listView" class="hidden flex flex-col gap-6 ">
       {properties.map((property) => <PropertyList {...property} />)}
     </div>
   </div>
