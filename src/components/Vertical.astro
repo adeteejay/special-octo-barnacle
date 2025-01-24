@@ -1,0 +1,297 @@
+---
+import Filters from './Filters.astro'
+import Map from './Map.astro'
+import PropertyCard from './PropertyCard.astro'
+import PropertyList from './PropertyList.astro'
+
+const properties = [
+  {
+    title: 'Modern 2 Bed Apartment in City Centre',
+    price: 1500,
+    beds: 2,
+    baths: 1,
+    description:
+      'Beautiful modern apartment with open plan living area, fully fitted kitchen, and private balcony. Close to all amenities and transport links.',
+    distance: '2.2 km away',
+    updated: 'Updated 3 days ago',
+    image:
+      'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80',
+    isExclusive: true,
+    propertyType: 'flat',
+    furnished: false,
+    acceptStudents: true,
+    acceptFamilies: true,
+    billsIncluded: true,
+    gardenAccess: false,
+    parkingAccess: true,
+    lat: 51.5074,
+    lng: -0.1278,
+  },
+  {
+    title: 'Luxury Penthouse with City Views',
+    price: 3500,
+    beds: 3,
+    baths: 2,
+    description:
+      'Stunning penthouse apartment offering panoramic city views, high-end finishes, and private roof terrace.',
+    distance: '1.8 km away',
+    updated: 'Updated 1 day ago',
+    image:
+      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80',
+    isExclusive: true,
+    propertyType: 'flat',
+    furnished: true,
+    acceptStudents: false,
+    acceptFamilies: true,
+    billsIncluded: false,
+    gardenAccess: true,
+    parkingAccess: true,
+    lat: 51.5154,
+    lng: -0.1248,
+  },
+  {
+    title: 'Cozy Studio in Historic Building',
+    price: 950,
+    beds: 'studio',
+    baths: 1,
+    description:
+      'Charming studio apartment in a converted Victorian building with period features.',
+    distance: '3.1 km away',
+    updated: 'Updated 2 days ago',
+    image:
+      'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80',
+    propertyType: 'studio',
+    furnished: true,
+    acceptStudents: true,
+    acceptFamilies: false,
+    billsIncluded: true,
+    gardenAccess: false,
+    parkingAccess: false,
+    lat: 51.5094,
+    lng: -0.1318,
+  },
+  {
+    title: 'Shared Room in Student House',
+    price: 600,
+    beds: 7,
+    baths: 2,
+    description: 'Furnished shared room in friendly student house, all bills included.',
+    distance: '4.0 km away',
+    updated: 'Updated 1 day ago',
+    image:
+      'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80',
+    propertyType: 'house',
+    furnished: true,
+    acceptStudents: true,
+    acceptFamilies: false,
+    billsIncluded: true,
+    gardenAccess: true,
+    parkingAccess: false,
+    lat: 51.5114,
+    lng: -0.1228,
+  },
+  {
+    title: 'Spacious 4 Bed Family Home',
+    price: 2800,
+    beds: 4,
+    baths: 3,
+    description: 'Large family home with garden, modern kitchen, and off-street parking.',
+    distance: '5.2 km away',
+    updated: 'Updated 4 days ago',
+    image:
+      'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80',
+    propertyType: 'house',
+    furnished: false,
+    acceptStudents: false,
+    acceptFamilies: true,
+    billsIncluded: false,
+    gardenAccess: true,
+    parkingAccess: true,
+    lat: 51.5184,
+    lng: -0.1358,
+  },
+  {
+    title: 'Modern 1 Bed with Balcony',
+    price: 1200,
+    beds: 1,
+    baths: 1,
+    description: 'Contemporary apartment with private balcony and city views.',
+    distance: '2.5 km away',
+    updated: 'Updated 2 days ago',
+    image:
+      'https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80',
+    isExclusive: true,
+    propertyType: 'flat',
+    furnished: true,
+    acceptStudents: true,
+    acceptFamilies: true,
+    billsIncluded: false,
+    gardenAccess: false,
+    parkingAccess: true,
+    lat: 51.5134,
+    lng: -0.1298,
+  },
+  {
+    title: 'Large 5 Bed Student House',
+    price: 3000,
+    beds: 5,
+    baths: 3,
+    description: 'Spacious student house with communal areas and garden.',
+    distance: '3.8 km away',
+    updated: 'Updated 5 days ago',
+    image:
+      'https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80',
+    propertyType: 'house',
+    furnished: true,
+    acceptStudents: true,
+    acceptFamilies: false,
+    billsIncluded: true,
+    gardenAccess: true,
+    parkingAccess: true,
+    lat: 51.5204,
+    lng: -0.1338,
+  },
+  {
+    title: 'Studio with Garden Access',
+    price: 1100,
+    beds: 'studio',
+    baths: 1,
+    description: 'Ground floor studio apartment with direct garden access.',
+    distance: '4.2 km away',
+    updated: 'Updated 1 day ago',
+    image:
+      'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80',
+    propertyType: 'studio',
+    furnished: true,
+    acceptStudents: true,
+    acceptFamilies: true,
+    billsIncluded: false,
+    gardenAccess: true,
+    parkingAccess: false,
+    lat: 51.5164,
+    lng: -0.1418,
+  },
+  {
+    title: 'Luxury 6 Bed Mansion',
+    price: 5000,
+    beds: 6,
+    baths: 4,
+    description: 'Exceptional mansion with high-end finishes and extensive grounds.',
+    distance: '6.5 km away',
+    updated: 'Updated 3 days ago',
+    image:
+      'https://images.unsplash.com/photo-1505843513577-22bb7d21e455?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80',
+    isExclusive: true,
+    propertyType: 'house',
+    furnished: true,
+    acceptStudents: false,
+    acceptFamilies: true,
+    billsIncluded: false,
+    gardenAccess: true,
+    parkingAccess: true,
+    lat: 51.5224,
+    lng: -0.1458,
+  },
+  {
+    title: 'Modern 3 Bed Townhouse',
+    price: 2400,
+    beds: 3,
+    baths: 2,
+    description: 'Contemporary townhouse with roof terrace and integrated appliances.',
+    distance: '3.2 km away',
+    updated: 'Updated 2 days ago',
+    image:
+      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80',
+    propertyType: 'house',
+    furnished: false,
+    acceptStudents: false,
+    acceptFamilies: true,
+    billsIncluded: false,
+    gardenAccess: true,
+    parkingAccess: true,
+    lat: 51.5124,
+    lng: -0.1378,
+  },
+]
+---
+
+<main class="grid grid-cols-1 lg:grid-cols-6 gap-2">
+  <div class="xl:col-span-3 lg:col-span-2 h-[calc(100vh-4rem)] sticky top-16">
+    <Map />
+  </div>
+
+  <div class="xl:col-span-3 lg:col-span-4 pt-4 mt-[5rem]">
+    <section class="flex sticky top-10 items-center mb-4 justify-between text-xl font-bold">
+      <div class="text-primary">
+        📌 Properties To Rent In <span class="underline">Grays, Essex</span>
+      </div>
+
+      <div class="text-lg flex items-center gap-4">
+        <span>110 properties found</span>
+        <div class="flex items-center gap-2">
+          <button id="gridButton" class="bg-gray-400 p-2 rounded border hover:border-primary" title="Grid View">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+              >
+              </path>
+            </svg>
+          </button>
+          <button id="listButton" class="p-2 rounded border hover:border-primary" title="List View">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              >
+              </path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+    <div id="gridView" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      {properties.map((property) => <PropertyCard {...property} />)}
+    </div>
+    <div id="listView" class="hidden flex flex-col gap-6">
+      {properties.map((property) => <PropertyList {...property} />)}
+    </div>
+  </div>
+</main>
+
+<script>
+  const gridButton = document.getElementById('gridButton')
+  const listButton = document.getElementById('listButton')
+
+  const gridView = document.getElementById('gridView')
+  const listView = document.getElementById('listView')
+
+  gridButton.addEventListener('click', () => {
+    gridView.classList.remove('hidden')
+    listView.classList.add('hidden')
+    listButton.classList.toggle('bg-gray-400')
+    gridButton.classList.toggle('bg-gray-400')
+  })
+  listButton.addEventListener('click', () => {
+    gridView.classList.add('hidden')
+    listView.classList.remove('hidden')
+    listButton.classList.toggle('bg-gray-400')
+    gridButton.classList.toggle('bg-gray-400')
+  })
+</script>

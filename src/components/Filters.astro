@@ -1,0 +1,689 @@
+---
+const typeOptions = [
+  { label: 'Alln Types', valuel: '2' },
+  { label: 'Bungalows', value: '3' },
+  { label: 'Detached', value: '4' },
+  { label: 'Farms/land', valuel: '5' },
+  { label: 'Semi-detached', valuel: '6' },
+  { label: 'Terraced', value: '7' },
+  { label: 'Flats', value: '8' },
+]
+
+const more = [
+  { label: 'Accept Students', value: 'Accept Students' },
+  { label: 'Ignore Student Only Properties', value: 'Ignore Student Only Properties' },
+  { label: 'Accept Families', value: 'Accept Families' },
+  { label: 'Accept DSS Income', value: 'Accept DSS Income' },
+  { label: 'Accept Pets', value: 'Accept Pets' },
+  { label: 'Bills Included', value: 'Bills Included' },
+  { label: 'Garden Access', value: 'Garden Access' },
+  { label: 'Parking Access', value: 'Parking Access' },
+  { label: 'Has Fireplace', value: 'Has Fireplace' },
+  { label: 'Video Tour ', value: 'Video Tour ' },
+]
+const viewOptions = [
+  { label: 'Hide Already Enquired', value: 'Hide Already Enquired' },
+  { label: 'Only Available Properties', value: 'Only Available Properties' },
+  { label: 'Show Rent Per Week', value: 'Show Rent Per Week' },
+]
+---
+
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+<div id="filters" class="fixed top-16 z-[9999] bg-white shadow w-full p-4 flex gap-4">
+  <div class="relative w-full mx-auto group">
+    <button
+      id="leftBtn"
+      class="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 border bg-white/80 shadow-lg rounded-full hover:bg-white transition-opacity z-10"
+      aria-label="Scroll left"
+    >
+      ←
+    </button>
+
+    <div class="px-10 py-2 relative">
+      <div class="absolute inset-x-0 bottom-0 h-4 bg-white/50 -translate-y-full"></div>
+      <div
+        id="contentWrapper"
+        class="flex gap-4 transition-transform duration-300 pb-4 -mb-4"
+        style="will-change: transform;"
+      >
+        <!-- Distance -->
+        <div class="flex items-center gap-2">
+          <input type="number" name="minPrice" placeholder="5" class="filter-chip !w-20" />
+          <select class="filter-chip">
+            <option value="miles">Kilometers</option>
+            <option value="miles">Minutes</option>
+          </select>
+        </div>
+        <!-- bedrooms -->
+        <div class="relative">
+          <div x-data="{ isOpen: false }">
+            <button
+              x-on:click="isOpen = !isOpen"
+              type="button"
+              class="filter-chip flex cursor-pointer items-center gap-2"
+            >
+              <span class="text-sm flex-1 text-start font-medium">Bedrooms</span>
+
+              <span class="transition" :class="{ '-rotate-180': isOpen }">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-4"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                  >
+                  </path>
+                </svg>
+              </span>
+            </button>
+
+            <div
+              x-cloak
+              x-transition
+              x-show="isOpen"
+              x-on:click.away="isOpen = false"
+              x-on:keydown.escape.window="isOpen = false"
+              class="absolute start-0 top-auto z-50 mt-2"
+            >
+              <div class="p-4 rounded border border-gray-200 bg-white">
+                <header class="hidden flex items-center justify-between p-4">
+                  <span class="text-sm">0 Selected</span>
+
+                  <button type="button" class="text-sm text-gray-900 underline underline-offset-4">
+                    Reset
+                  </button>
+                </header>
+
+                <div>
+                  <div class="flex items-center space-x-2">
+                    <select name="minBeds" class="filter-chip px-2 py-1 border rounded">
+                      <option value="">Min Beds</option>
+                      <option value="shared">Shared</option>
+                      <option value="studio">Studio</option>
+                      {
+                        Array.from({ length: 8 }, (_, i) => i + 1).map((num) => (
+                          <option value={num}>{num}</option>
+                        ))
+                      }
+                      <option value="8+">8+</option>
+                    </select>
+                    <span>to</span>
+                    <select name="maxBeds" class="filter-chip px-2 py-1 border rounded">
+                      <option value="">Max Beds</option>
+                      <option value="shared">Shared</option>
+                      <option value="studio">Studio</option>
+                      {
+                        Array.from({ length: 8 }, (_, i) => i + 1).map((num) => (
+                          <option value={num}>{num}</option>
+                        ))
+                      }
+                      <option value="8+">8+</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- bathrooms -->
+        <div class="relative">
+          <div x-data="{ isOpen: false, selectedBaths: null }">
+            <button
+              x-on:click="isOpen = !isOpen"
+              type="button"
+              class="filter-chip flex cursor-pointer items-center gap-2"
+            >
+              <span class="text-sm flex-1 text-start font-medium inline-flex justify-start"  x-text="selectedBaths ? '🚿 '+selectedBaths : 'Bathrooms'"></span>
+              <span class="transition" :class="{ '-rotate-180': isOpen }">
+                <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                >
+                </path>
+              </svg>
+              </span>
+            </button>
+
+            <div
+              x-cloak
+              x-transition
+              x-show="isOpen"
+              class="absolute start-0 top-auto z-50 mt-2"
+            >
+              <div class="p-4 w-56 rounded border border-gray-200 bg-white grid grid-cols-2 gap-2">
+                {
+                  [1, 2, 3, 4, 5, 6, 7, '8+'].map((num) => (
+                    <button
+                      type="button"
+                      key={num}
+                      x-on:click={`selectedBaths = ${num === '8+' ? "'8+'" : num}; isOpen = false`}
+                      :class="{ 'border-primary bg-primary-light': selectedBaths === ${typeof num === 'string' ? `'${num}'` : num} }"
+                      class="bath-filter px-3 py-1 border rounded-md hover:border-primary transition-colors"
+                    >
+                      🚿 {num}
+                    </button>
+                  ))
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- price range -->
+        <div class="relative">
+          <div x-data="{ isOpen: false }">
+            <button
+              x-on:click="isOpen = !isOpen"
+              type="button"
+              class="filter-chip flex cursor-pointer items-center gap-2 border"
+            >
+              <span class="text-sm flex-1 text-start font-medium">Price</span>
+
+              <span class="transition" :class="{ '-rotate-180': isOpen }">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-4"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                  >
+                  </path>
+                </svg>
+              </span>
+            </button>
+
+            <div
+              x-cloak
+              x-transition
+              x-show="isOpen"
+              x-on:click.away="isOpen = false"
+              x-on:keydown.escape.window="isOpen = false"
+              class="absolute start-0 top-auto z-50 mt-2"
+            >
+              <div class="w-96 rounded border border-gray-200 bg-white">
+                <header class="flex hidden items-center justify-between p-4">
+                  <span class="text-sm">The highest price is $600</span>
+
+                  <button type="button" class="text-sm text-gray-900 underline underline-offset-4">
+                    Reset
+                  </button>
+                </header>
+
+                <div class="border-t border-gray-200 p-4">
+                  <div class="flex justify-between gap-4">
+                    <label for="FilterPriceFrom" class="flex items-center gap-2">
+                      <span class="text-sm text-gray-600">$</span>
+
+                      <input
+                        type="number"
+                        id="FilterPriceFrom"
+                        placeholder="From"
+                        class="filter-chip !w-full"
+                      />
+                    </label>
+
+                    <label for="FilterPriceTo" class="flex items-center gap-2">
+                      <span class="text-sm text-gray-600">$</span>
+
+                      <input
+                        type="number"
+                        id="FilterPriceTo"
+                        placeholder="To"
+                        class="!w-full filter-chip"
+                      />
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- property type -->
+        <div class="relative">
+          <div x-data="{ isOpen: false }">
+            <button
+              x-on:click="isOpen = !isOpen"
+              type="button"
+              class="filter-chip flex cursor-pointer items-center gap-2 border"
+            >
+              <span class="text-sm flex-1 text-start font-medium">Property&nbsp;Type</span>
+
+              <span class="transition" :class="{ '-rotate-180': isOpen }">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-4"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                  >
+                  </path>
+                </svg>
+              </span>
+            </button>
+
+            <div
+              x-cloak
+              x-transition
+              x-show="isOpen"
+              x-on:click.away="isOpen = false"
+              x-on:keydown.escape.window="isOpen = false"
+              class="absolute start-0 top-auto z-50 mt-2"
+            >
+              <div class="w-96 rounded border border-gray-200 bg-white">
+                <fieldset>
+                  {
+                    typeOptions.map((item) => (
+                      <div>
+                        <label for={item.value} class="radio-select">
+                          <p class="">{item.label}</p>
+                          <input
+                            type="radio"
+                            name="propertytype"
+                            value={item.value}
+                            id={item.value}
+                            class="sr-only"
+                          />
+                        </label>
+                      </div>
+                    ))
+                  }
+                </fieldset>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- furnishing -->
+        <div class="relative">
+          <div x-data="{ isOpen: false }">
+            <button
+              x-on:click="isOpen = !isOpen"
+              type="button"
+              class="filter-chip flex cursor-pointer items-center gap-2 border"
+            >
+              <span class="text-sm flex-1 text-start font-medium">Furnishing</span>
+
+              <span class="transition" :class="{ '-rotate-180': isOpen }">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-4"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                  >
+                  </path>
+                </svg>
+              </span>
+            </button>
+
+            <div
+              x-cloak
+              x-transition
+              x-show="isOpen"
+              x-on:click.away="isOpen = false"
+              x-on:keydown.escape.window="isOpen = false"
+              class="absolute start-0 top-auto z-50 mt-2"
+            >
+              <div class="w-96 rounded border border-gray-200 bg-white">
+                <fieldset>
+                  <div>
+                    <label for="both" class="radio-select">
+                      <p class="">Furnished and Unfurnished</p>
+
+                      <input
+                        type="radio"
+                        name="Furnishing"
+                        value="both"
+                        id="both"
+                        class="sr-only"
+                        checked
+                      />
+                    </label>
+                  </div>
+
+                  <div>
+                    <label for="furnished" class="radio-select">
+                      <p class="">Furnished</p>
+
+                      <input
+                        type="radio"
+                        name="Furnishing"
+                        value="furnished"
+                        id="furnished"
+                        class="sr-only"
+                      />
+                    </label>
+                  </div>
+                  <div>
+                    <label for="unfurnished" class="radio-select">
+                      <p class="">Unfurnished</p>
+
+                      <input
+                        type="radio"
+                        name="Furnishing"
+                        value="unfurnished"
+                        id="unfurnished"
+                        class="sr-only"
+                        checked
+                      />
+                    </label>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- sort -->
+        <div class="relative">
+          <div x-data="{ isOpen: false }">
+            <button
+              x-on:click="isOpen = !isOpen"
+              type="button"
+              class="filter-chip flex cursor-pointer items-center gap-2 border"
+            >
+              <span class="text-sm flex-1 text-start font-medium">Sort By</span>
+
+              <span class="transition" :class="{ '-rotate-180': isOpen }">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-4"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                  >
+                  </path>
+                </svg>
+              </span>
+            </button>
+
+            <div
+              x-cloak
+              x-transition
+              x-show="isOpen"
+              x-on:click.away="isOpen = false"
+              x-on:keydown.escape.window="isOpen = false"
+              class="absolute start-0 top-auto z-50 mt-2"
+            >
+              <div class="w-96 rounded border border-gray-200 bg-white">
+                <fieldset>
+                  <div>
+                    <label for="Distance" class="radio-select">
+                      <p class="">Distance</p>
+                      <input
+                        type="radio"
+                        name="SortBy"
+                        value="Distance"
+                        id="Distance"
+                        class="sr-only"
+                        checked
+                      />
+                    </label>
+                  </div>
+
+                  <div>
+                    <label for="lowhigh" class="radio-select">
+                      <p class="">Price: Low to High</p>
+
+                      <input
+                        type="radio"
+                        name="SortBy"
+                        value="lowhigh"
+                        id="lowhigh"
+                        class="sr-only"
+                      />
+                    </label>
+                  </div>
+                  <div>
+                    <label for="HighLow" class="radio-select">
+                      <p class="">Price: High to Low</p>
+
+                      <input
+                        type="radio"
+                        name="SortBy"
+                        value="HighLow"
+                        id="HighLow"
+                        class="sr-only"
+                        checked
+                      />
+                    </label>
+                  </div>
+
+                  <div>
+                    <label for="Recent" class="radio-select">
+                      <p class="">Most Recent</p>
+
+                      <input
+                        type="radio"
+                        name="SortBy"
+                        value="Recent"
+                        id="Recent"
+                        class="sr-only"
+                      />
+                    </label>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- view options -->
+        <div class="relative">
+          <div x-data="{ isOpen: false }">
+            <button
+              x-on:click="isOpen = !isOpen"
+              type="button"
+              class="filter-chip !w-56 flex cursor-pointer items-center gap-2"
+            >
+              <span class="text-sm flex-1 text-start font-medium">View Options</span>
+
+              <span class="transition" :class="{ '-rotate-180': isOpen }">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-4"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                  >
+                  </path>
+                </svg>
+              </span>
+            </button>
+
+            <div
+              x-cloak
+              x-transition
+              x-show="isOpen"
+              x-on:click.away="isOpen = false"
+              x-on:keydown.escape.window="isOpen = false"
+              class="absolute start-0 top-auto z-50 mt-2"
+            >
+              <div class="w-56 rounded border border-gray-200 bg-white">
+                <ul class="space-y-1 border-t border-gray-200 p-4">
+                  {
+                    viewOptions.map((item) => (
+                      <li>
+                        <label for="FilterInStock" class="inline-flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            id={'filter' + item.value}
+                            class="size-5 rounded border-gray-300"
+                          />
+                          <span class="text-sm font-medium ">{item.label}</span>
+                        </label>
+                      </li>
+                    ))
+                  }
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- others -->
+        <div class="relative">
+          <div x-data="{ isOpen: false }">
+            <button
+              x-on:click="isOpen = !isOpen"
+              type="button"
+              class="filter-chip !w-56 flex cursor-pointer items-center gap-2"
+            >
+              <span class="text-sm flex-1 text-start font-medium">More Filters</span>
+
+              <span class="transition" :class="{ '-rotate-180': isOpen }">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-4"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                  >
+                  </path>
+                </svg>
+              </span>
+            </button>
+
+            <div
+              x-cloak
+              x-transition
+              x-show="isOpen"
+              x-on:click.away="isOpen = false"
+              x-on:keydown.escape.window="isOpen = false"
+              class="absolute start-0 top-auto z-50 mt-2"
+            >
+              <div class="w-56 rounded border border-gray-200 bg-white">
+                <ul class="space-y-1 border-t border-gray-200 p-4">
+                  {
+                    more.map((item) => (
+                      <li>
+                        <label for="FilterInStock" class="inline-flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            id={'filter' + item.value}
+                            class="size-5 rounded border-gray-300"
+                          />
+                          <span class="text-sm font-medium ">{item.label}</span>
+                        </label>
+                      </li>
+                    ))
+                  }
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button
+      id="rightBtn"
+      class="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 border bg-white/80 shadow-lg rounded-full hover:bg-white transition-opacity z-10"
+      aria-label="Scroll right"
+    >
+      →
+    </button>
+  </div>
+</div>
+
+<style>
+  .filter-chip {
+    @apply min-w-28 px-2 h-9 py-1 border border-gray-500 rounded-md bg-white;
+  }
+  .radio-select {
+    @apply flex cursor-pointer bg-white p-4 text-sm font-medium hover:bg-gray-50 has-[:checked]:bg-primary has-[:checked]:!text-white has-[:checked]:ring-1 has-[:checked]:ring-blue-500;
+  }
+  [x-cloak] + div {
+    z-index: 9999 !important;
+    overflow: visible !important;
+  }
+</style>
+
+<script is:inline>
+  ;(function () {
+    const contentWrapper = document.getElementById('contentWrapper')
+    const leftBtn = document.getElementById('leftBtn')
+    const rightBtn = document.getElementById('rightBtn')
+
+    let position = 0
+    const itemWidth = 256 // w-64 = 256px
+    const gap = 16 // gap-4 = 16px
+    const step = itemWidth + gap // Fixed step calculation
+
+    function updateButtons() {
+      leftBtn.disabled = position >= 0
+      const maxScroll = -(contentWrapper.scrollWidth - contentWrapper.clientWidth)
+      rightBtn.disabled = position <= maxScroll
+    }
+
+    rightBtn.addEventListener('click', () => {
+      const maxScroll = -(contentWrapper.scrollWidth - contentWrapper.clientWidth)
+      position = Math.max(position - step, maxScroll)
+      contentWrapper.style.transform = `translateX(${position}px)`
+      updateButtons()
+    })
+
+    leftBtn.addEventListener('click', () => {
+      position = Math.min(position + step, 0)
+      contentWrapper.style.transform = `translateX(${position}px)`
+      updateButtons()
+    })
+
+    // Initialize button states
+    updateButtons()
+
+    // Handle window resize
+    window.addEventListener('resize', updateButtons)
+  })()
+</script>
+ 

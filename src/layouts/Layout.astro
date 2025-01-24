@@ -1,0 +1,41 @@
+---
+interface Props {
+  title: string
+}
+
+const { title } = Astro.props
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="OpenRent UI Redesign" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <!-- <script is:inline src="https://cdn.jsdelivr.net/npm/saashound-web/dist/saashound.js"></script>
+    <script>
+      window.onload = function () {
+        window.initSaasHound({
+          token: '64a4bf39-f508-4c7d-92fd-c71fd070c86a',
+          project: 'openrent',
+          trackPageViews: true,
+        })
+        console.log('sh initialized and tracking started!')
+        window.saasHound?.logEvent({
+          title: 'Page View',
+          channel: 'views',
+        })
+      }
+    </script> -->
+  </head>
+  <body class="bg-neutral font-sans text-text-primary overflow-x-hidden">
+    <slot />
+  </body>
+</html>
